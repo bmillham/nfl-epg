@@ -4,6 +4,10 @@ It will use your Xtream codes to find the NFL 01 to NFL 16 \
 channels and use the names from those channels to create\
 the EPG.
 
+The source EPG is from https://epgshare01.online\
+For the basic info epg_ripper_SPORTS01 is used.\
+For the optional details epg_ripper_LOCALS01 is used.
+
 # Installing
 
 ## Install Rust
@@ -64,7 +68,7 @@ Output is saved in the current directory.\
 \
 The --next-game option will add EPG entries with Next Game: Team info\
 before the games scheduled time. If you do not use this option\
-then there will only be a EPG entry for when the game is scheduled.\
+then there will only be an EPG entry for when the game is scheduled.\
 \
 The --local-info option will try to find the game description from\
 local channels instead of the generic entry found on the sports channels.\
@@ -81,7 +85,7 @@ The first time you run you will notice a lot of packages being downloaded and co
 This is normal.
 
 # Building
-If you want to run this from a cron job, etc you need to build the project. To do this just run
+If you want to run this from a cron job, etc. you need to build the project. To do this just run
 
 cargo build --release
 
