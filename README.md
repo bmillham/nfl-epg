@@ -37,7 +37,7 @@ $ sudo zypper in libopenssl-devel gcc
 
 ### Windows or Mac
 
-Go to https://www.rust-lan.org/tools/install and follow the instructions.
+Go to https://www.rust-lang.org/tools/install and follow the instructions.
 
 #### Windows Executable for WIn10/11
 
