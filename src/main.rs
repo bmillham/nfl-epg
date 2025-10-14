@@ -65,6 +65,10 @@ async fn main() {
             }
         }
     }
+    if teams.is_empty() {
+        println!("No teams found");
+        return;
+    }
 
     let now = Utc::now();
     let end = now + Duration::days(7);
