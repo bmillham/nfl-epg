@@ -1,0 +1,14 @@
+[package]
+name = "nfl-epg"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+xmltv = "1.0.1"
+quick-xml = { version = "0.38.3", features=["serialize"] }
+chrono = "0.4.42"
+reqwest = { version = "0.12.23" }
+libflate = "2.1.0"
+clap = { version = "4.5.48", features = ["derive"] }
+xtream-lib = { git = "https://github.com/bmillham/xtream-lib.git" }
+tokio = "1.47.1"
