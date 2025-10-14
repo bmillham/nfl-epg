@@ -1,4 +1,4 @@
-# xtream2m3u
+# nfl-epg
 Create a XMLTV Guide for NFL Football games.\
 It will use your Xtream codes to find the NFL 01 to NFL 16 \
 channels and use the names from those channels to create\
