@@ -1,1 +1,11 @@
 /target
+/#nflepg.xml#
+/Cargo.lock
+/epg_ripper_US_LOCALS1.xml
+/epg_ripper_US_LOCALS1.xml.gz
+/epg_ripper_US_SPORTS1.xml
+/epg_ripper_US_SPORTS1.xml.gz
+/.idea/modules.xml
+/.idea/nfl-epg.iml
+/nflepg.xml
+/.idea/vcs.xml
