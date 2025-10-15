@@ -66,8 +66,10 @@ async fn main() {
         }
     }
     if teams.is_empty() {
-        println!("No teams found");
+        println!("No games found");
         return;
+    } else {
+        println!("Found {} games", teams.len());
     }
 
     let now = Utc::now();
@@ -113,15 +115,13 @@ async fn main() {
     }
     println!("Read epg info");
     for team in teams.iter() {
+        //println!("Team: {:?}", team);
         let mut chanid = "".to_string();
         let mut found_id: String = "".to_string();
-        //let mut team_name: String = "".to_string();
         for c in &mut item.channels {
             if c.display_names[0].name.starts_with("NFL") {
                 if c.display_names[0].name.to_lowercase().contains(team.2.to_lowercase().as_str()) {
                     chanid = format!("NFL{:02}.us", team.0).to_string();
-                    //println!("{:?} {:?}", c.display_names[0].name, c.id);
-                    //team_name = c.display_names[0].name.clone();
                     found_id = c.id.clone();
                     c.id = chanid.clone();
                     sports_epg.channels.push(c.clone());
@@ -145,7 +145,6 @@ async fn main() {
                 p.channel = chanid.clone(); // Change the chanid
                 if p.titles[0].value.to_lowercase().starts_with("next game:") {
                     // Skip if --next-game isn't selected
-                    println!("{}", p.titles[0].value);
                     if !args.next_game {
                         continue;
                     }
