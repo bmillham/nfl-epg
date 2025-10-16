@@ -6,9 +6,12 @@ edition = "2024"
 [dependencies]
 xmltv = "1.0.1"
 quick-xml = { version = "0.38.3", features=["serialize"] }
-chrono = "0.4.42"
+chrono = {  version = "0.4.42", features = ["serde"] }
 reqwest = { version = "0.12.23" }
 libflate = "2.1.0"
 clap = { version = "4.5.48", features = ["derive"] }
-xtream-lib = { git = "https://github.com/bmillham/xtream-lib.git", tag="V0.1.0" }
+#xtream-lib = { git = "https://github.com/bmillham/xtream-lib.git", tag="V0.1.0" }
+xtream-lib = { path="../xtream-lib" }
 tokio = "1.47.1"
+serde_json = "1.0.145"
+serde = "1.0.228"

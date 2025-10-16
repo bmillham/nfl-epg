@@ -2,11 +2,14 @@ use std::fs;
 use std::string::ToString;
 use quick_xml::se::to_string_with_root;
 use xmltv::*;
-use chrono::{Utc, Duration, Datelike, Timelike};
+use chrono::{Utc, Duration, Datelike, Timelike, DateTime, NaiveDateTime};
 use clap::Parser;
 use xtream_lib::xtream_connection::server;
 use xtream_lib::xtream_connection::valueextensions::ValueExtensions;
 use nfl_epg;
+use serde::{Serialize, Deserialize};
+use serde_json::Result;
+
 const SPORTS_URL: &str = "https://epgshare01.online/epgshare01/epg_ripper_US_SPORTS1.xml.gz";
 const LOCALS_URL: &str = "https://epgshare01.online/epgshare01/epg_ripper_US_LOCALS1.xml.gz";
 const GENERATOR_INFO: &str = "NFL-EPG";
@@ -31,20 +34,30 @@ struct Args {
     output: String,
 }
 
+/*#[derive(Serialize, Deserialize)]
+struct Account {
+    created: DateTime<Utc>,
+    expires: DateTime<Utc>,
+    status: String,
+    active_connections: u32,
+    is_trial: bool,
+}*/
+
 #[tokio::main]
 async fn main() {
     let args = Args::parse();
 
     let server = server::new(&args.server, &args.username, &args.password);
-    let account_info = server.get_account_info().await;
+    //let account_info = server.get_account_info().await;
+    let account_info:server::Account = server.get_account_info().await;
 
     println!("Account Information");
-    println!(" Created: {}", account_info.created());
-    println!(" Expires: {}", account_info.expires());
-    println!(" Status: {}", account_info.status());
-    println!(" Active Connections: {}", account_info.active_cons());
-    println!(" Max Connections: {}", account_info.max_connections());
-    println!(" Trial: {}", account_info.is_trial());
+    println!(" Created: {}", account_info.created);
+    println!(" Expires: {}", account_info.expires);
+    println!(" Status: {}", account_info.status);
+    println!(" Active Connections: {}", account_info.active_connections);
+    //println!(" Max Connections: {}", account_info.max_connections());
+    println!(" Trial: {}", account_info.is_trial);
     let cats = server.get_live_categories().await;
 
     // Get NLF PPV channel names
