@@ -1,6 +1,7 @@
 use std::fs;
 use std::string::ToString;
-use quick_xml::se::to_string_with_root;
+use serde_core::ser::Serialize;
+use quick_xml::se::{to_string_with_root, Serializer};
 use xmltv::*;
 use chrono::{Utc, Duration, Datelike, Timelike};
 use clap::Parser;
@@ -29,6 +30,8 @@ struct Args {
     next_game: bool,
     #[arg(short, long, default_value = "nfl_epg.xml")]
     output: String,
+    #[arg(short = 'P', long, default_value = "false")]
+    pretty_print: bool,
 }
 
 #[tokio::main]
@@ -174,9 +177,19 @@ async fn main() {
         }
         println!("{} @ {}: Added {} guide entries", team.1, team.2 , events);
     }
-    fs::write(args.output,
-              "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n".to_owned() +
-                  &to_string_with_root("tv", &sports_epg).unwrap())
+    let mut buffer = String::new();
+    buffer += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+    buffer += "<!DOCTYPE tv SYSTEM \"xmltv.dtd\">\n";
+    if args.pretty_print {
+        let mut ser = Serializer::new(&mut buffer);
+        ser.indent(' ', 1);
+        sports_epg.serialize(ser).unwrap();
+        buffer = buffer.replace("<Tv ", "<tv ");
+        buffer = buffer.replace("</Tv>", "</tv>");
+    } else {
+        buffer += &to_string_with_root("tv", &sports_epg).unwrap();
+    }
+    buffer += "\n";
+    fs::write(args.output, &buffer)
         .expect("couldn't write to file");
-
 }

@@ -12,3 +12,4 @@ libflate = "2.1.0"
 clap = { version = "4.5.48", features = ["derive"] }
 xtream-lib = { git = "https://github.com/bmillham/xtream-lib.git", tag="V0.1.0" }
 tokio = "1.47.1"
+serde_core = "1.0.228"
