@@ -5,7 +5,6 @@ use xmltv::*;
 use chrono::{Utc, Duration, Datelike, Timelike};
 use clap::Parser;
 use xtream_lib::xtream_connection::server;
-use xtream_lib::xtream_connection::valueextensions::ValueExtensions;
 use xtream_lib::xtream_info::account::{Account, XboolExtensions, XdateExtensions};
 use xtream_lib::xtream_info::categories::CategoryExtensions;
 use nfl_epg;
@@ -55,8 +54,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         if cat.category_name == "US| NFL PPV" {
             let live = server.get_live_streams(Some(cat.get_category_id().try_into().unwrap())).await;
             for l in live {
-                //println!("  {:?}", l.get_name());
-                let chan_name = l.get_name();
+                let chan_name = l.name.to_string();
                 let s = chan_name.split(" at ").collect::<Vec<&str>>();
                 if s.len() > 1 {
                     let s1 = s[0].split_whitespace().collect::<Vec<&str>>();
