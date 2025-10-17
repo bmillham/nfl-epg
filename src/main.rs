@@ -7,6 +7,7 @@ use clap::Parser;
 use xtream_lib::xtream_connection::server;
 use xtream_lib::xtream_connection::valueextensions::ValueExtensions;
 use xtream_lib::xtream_info::account::{Account, XboolExtensions, XdateExtensions};
+use xtream_lib::xtream_info::categories::CategoryExtensions;
 use nfl_epg;
 
 const SPORTS_URL: &str = "https://epgshare01.online/epgshare01/epg_ripper_US_SPORTS1.xml.gz";
@@ -34,8 +35,8 @@ struct Args {
 }
 
 #[tokio::main]
-async fn main() {
-    let args = Args::parse();
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+  let args = Args::parse();
 
     let server = server::new(&args.server, &args.username, &args.password);
     let account_info: Account = server.get_account_info().await;
@@ -47,12 +48,11 @@ async fn main() {
     println!(" Max Connections: {}", account_info.max_connections);
     println!(" Trial: {}", account_info.is_trial.to_bool());
     let cats = server.get_live_categories().await;
-
     // Get NLF PPV channel names
     println!("Looking for US: NFL PPV");
     let mut teams = vec![];
     for cat in cats {
-        if cat.get_category_name() == "US| NFL PPV" {
+        if cat.category_name == "US| NFL PPV" {
             let live = server.get_live_streams(Some(cat.get_category_id().try_into().unwrap())).await;
             for l in live {
                 //println!("  {:?}", l.get_name());
@@ -68,7 +68,7 @@ async fn main() {
     }
     if teams.is_empty() {
         println!("No games found");
-        return;
+        return Ok(()) ;
     } else {
         println!("Found {} games", teams.len());
     }
@@ -180,4 +180,5 @@ async fn main() {
                   &to_string_with_root("tv", &sports_epg).unwrap())
         .expect("couldn't write to file");
 
+    Ok(())
 }
