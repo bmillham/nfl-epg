@@ -38,7 +38,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
   let args = Args::parse();
 
     let server = server::new(&args.server, &args.username, &args.password);
-    let account_info: Account = server.get_account_info().await;
+    let account_info: Account = server.get_account_info().await?;
     println!("Account Information");
     println!(" Created: {}", account_info.created_at.to_date());
     println!(" Expires: {}", account_info.exp_date.to_date());
