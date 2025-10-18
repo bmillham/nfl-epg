@@ -49,13 +49,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!(" Active Connections: {}", account_info.active_cons);
     println!(" Max Connections: {}", account_info.max_connections);
     println!(" Trial: {}", account_info.is_trial.to_bool());
-    let cats = server.get_live_categories().await;
+    let cats = server.get_live_categories().await?;
     // Get NLF PPV channel names
     println!("Looking for US: NFL PPV");
     let mut teams = vec![];
     for cat in cats {
         if cat.category_name == "US| NFL PPV" {
-            let live = server.get_live_streams(Some(cat.get_category_id().try_into().unwrap())).await;
+            let live = server.get_live_streams(Some(cat.get_category_id().try_into().unwrap())).await?;
             for l in live {
                 let chan_name = l.name.to_string();
                 let s = chan_name.split(" at ").collect::<Vec<&str>>();
