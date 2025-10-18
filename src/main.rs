@@ -5,10 +5,8 @@ use xmltv::*;
 use chrono::{Utc, Duration, Datelike, Timelike};
 use clap::Parser;
 use xtream_lib::xtream_connection::server;
-use xtream_lib::xtream_info::account::{Account, XboolExtensions, XdateExtensions};
-use xtream_lib::xtream_info::categories::CategoryExtensions;
+use xtream_lib::xtream_connection::valueextensions::ValueExtensions;
 use nfl_epg;
-
 const SPORTS_URL: &str = "https://epgshare01.online/epgshare01/epg_ripper_US_SPORTS1.xml.gz";
 const LOCALS_URL: &str = "https://epgshare01.online/epgshare01/epg_ripper_US_LOCALS1.xml.gz";
 const GENERATOR_INFO: &str = "NFL-EPG";
@@ -34,27 +32,30 @@ struct Args {
 }
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-  let args = Args::parse();
+async fn main() {
+    let args = Args::parse();
 
     let server = server::new(&args.server, &args.username, &args.password);
-    let account_info: Account = server.get_account_info().await?;
+    let account_info = server.get_account_info().await;
+
     println!("Account Information");
-    println!(" Created: {}", account_info.created_at.to_date());
-    println!(" Expires: {}", account_info.exp_date.to_date());
-    println!(" Status: {}", account_info.status);
-    println!(" Active Connections: {}", account_info.active_cons);
-    println!(" Max Connections: {}", account_info.max_connections);
-    println!(" Trial: {}", account_info.is_trial.to_bool());
+    println!(" Created: {}", account_info.created());
+    println!(" Expires: {}", account_info.expires());
+    println!(" Status: {}", account_info.status());
+    println!(" Active Connections: {}", account_info.active_cons());
+    println!(" Max Connections: {}", account_info.max_connections());
+    println!(" Trial: {}", account_info.is_trial());
     let cats = server.get_live_categories().await;
+
     // Get NLF PPV channel names
     println!("Looking for US: NFL PPV");
     let mut teams = vec![];
     for cat in cats {
-        if cat.category_name == "US| NFL PPV" {
+        if cat.get_category_name() == "US| NFL PPV" {
             let live = server.get_live_streams(Some(cat.get_category_id().try_into().unwrap())).await;
             for l in live {
-                let chan_name = l.name.to_string();
+                //println!("  {:?}", l.get_name());
+                let chan_name = l.get_name();
                 let s = chan_name.split(" at ").collect::<Vec<&str>>();
                 if s.len() > 1 {
                     let s1 = s[0].split_whitespace().collect::<Vec<&str>>();
@@ -66,7 +67,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     if teams.is_empty() {
         println!("No games found");
-        return Ok(()) ;
+        return;
     } else {
         println!("Found {} games", teams.len());
     }
@@ -178,5 +179,4 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                   &to_string_with_root("tv", &sports_epg).unwrap())
         .expect("couldn't write to file");
 
-    Ok(())
 }

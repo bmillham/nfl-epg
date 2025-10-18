@@ -63,6 +63,7 @@ Everything from here on is done in the nfl-epg directory.
 + -n, --next-game: Adds Next Game information
 + -l, --local-info: Try to find the game details on local channels
 + -o, --output: File to save to (default nfl-epg.xml)
++ -P, --pretty-print: Use pretty format when saving the xml
 
 Output is saved in the current directory.\
 \
